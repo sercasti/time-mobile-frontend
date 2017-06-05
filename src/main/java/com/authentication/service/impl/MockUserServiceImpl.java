@@ -28,7 +28,7 @@ public class MockUserServiceImpl implements UserService {
 		if (StringUtils.isBlank(thePassword))
 			throw new UsernameNotFoundException("User not found: " + username);
 
-		if (StringUtils.equalsIgnoreCase(thePassword, password)) {
+		if (!StringUtils.equalsIgnoreCase(thePassword, password)) {
 			throw new BadCredentialsException("Authentication Failed. Username or Password not valid.");
 		}
 		return new User(username);

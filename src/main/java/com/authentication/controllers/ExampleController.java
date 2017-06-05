@@ -1,5 +1,7 @@
 package com.authentication.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,8 +14,28 @@ public class ExampleController {
 	}
 	
 	@RequestMapping("/")
-	String hello() {
-		return "use a POST request to /login and get your jwt token, or just visit /unsecured";
+	String hello(HttpServletRequest request) {
+	    String uri = request.getRequestURL().toString();
+		return "<ul> <li>To login, send a POST to " + uri +"login </li></br>"
+				+ "<li>Secured endpoint example: " + uri +"api/me </li></br>"
+				+ "<li>Unsecured endpoint example: " + uri +"unsecured </li></br>"
+				+ "<li>To logout, just use " + uri +"logout</li>"
+				+ "</ul></br></br></br>"
+		        + "<b>login headers:</b></br>"
+		        + "X-Requested-With: XMLHttpRequest</br>"  
+				+ "Content-Type: application/json</br>"
+				+ "Cache-Control: no-cache</br>"
+				+ "login body:</br>"
+				+ "{</br>"
+				+ "    \"username\": \"test1\",</br>"
+				+ "    \"password\": \"test1\"</br>"
+				+ "}"
+				+ "</br>"
+				+ "<b>login response:</b></br>"
+				+ "{</br> "
+				+ "\"token\": \"eyJ... the token to send on each request on the X-Authorization header\", </br>"
+				+ "\"refreshToken\": \"eyJhbGciO... used to acquire new Access Token calling " + uri +"refresh \"</br>"
+				+ "}";
 	}
 	
 	@RequestMapping("/api/**")
