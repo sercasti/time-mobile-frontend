@@ -35,7 +35,11 @@ public class ExampleController {
 				+ "{</br> "
 				+ "\"token\": \"eyJ... the token to send on each request on the X-Authorization header\", </br>"
 				+ "\"refreshToken\": \"eyJhbGciO... used to acquire new Access Token calling " + uri +"refresh \"</br>"
-				+ "}";
+				+ "}</br></br></br>"
+				+ "<b>Sample GET request:</b></br>"
+				+ "GET /api/me HTTP/1.1</br>"
+				+ "Host: localhost:8080</br>"
+                + "X-Authorization: <b>Bearer</b> eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MSIsInNjb3BlcyI6IlVTRVIiLCJpc3MiOiJodHRwOi8vdGVzdGluZy5jb20iLCJpYXQiOjE0OTY3MDY4MjQsImV4cCI6MTQ5NjcwNzcyNH0.0L68nr2NapNKdXmahAgD_1AzO_BMvCwQTUdg6x53awuPi5slpiXj-j0B7cjrprCc_ZSj7dZ-DxJcLsqpOodhwQ";
 	}
 	
 	@RequestMapping("/api/**")

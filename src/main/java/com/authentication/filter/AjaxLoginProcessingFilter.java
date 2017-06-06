@@ -24,53 +24,54 @@ import com.authentication.command.LoginRequest;
 import com.authentication.common.WebUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {  
-    private static Logger logger = LoggerFactory.getLogger(AjaxLoginProcessingFilter.class);
+public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
+	private static Logger logger = LoggerFactory.getLogger(AjaxLoginProcessingFilter.class);
 
-    private final AuthenticationSuccessHandler successHandler;
-    private final AuthenticationFailureHandler failureHandler;
+	private final AuthenticationSuccessHandler successHandler;
+	private final AuthenticationFailureHandler failureHandler;
 
-    private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-    public AjaxLoginProcessingFilter(String defaultProcessUrl, AuthenticationSuccessHandler successHandler, 
-            AuthenticationFailureHandler failureHandler, ObjectMapper mapper) {
-        super(defaultProcessUrl);
-        this.successHandler = successHandler;
-        this.failureHandler = failureHandler;
-        this.objectMapper = mapper;
-    }
+	public AjaxLoginProcessingFilter(String defaultProcessUrl, AuthenticationSuccessHandler successHandler,
+			AuthenticationFailureHandler failureHandler, ObjectMapper mapper) {
+		super(defaultProcessUrl);
+		this.successHandler = successHandler;
+		this.failureHandler = failureHandler;
+		this.objectMapper = mapper;
+	}
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
-        if (!HttpMethod.POST.name().equals(request.getMethod()) || !WebUtils.isAjax(request)) {
-            if(logger.isDebugEnabled()) {
-                logger.debug("Authentication method not supported. Request method: " + request.getMethod());
-            }
-            throw new AuthenticationServiceException("Authentication method not supported");
-        }
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException, IOException, ServletException {
+		if (!HttpMethod.POST.name().equals(request.getMethod()) || !WebUtils.isAjax(request)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Authentication method not supported. Request method: " + request.getMethod());
+			}
+			throw new AuthenticationServiceException("Authentication method not supported");
+		}
 
-        LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
+		LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
 
-        if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
-            throw new AuthenticationServiceException("Username or Password not provided");
-        }
+		if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
+			throw new AuthenticationServiceException("Username or Password not provided");
+		}
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+				loginRequest.getPassword());
 
-        return this.getAuthenticationManager().authenticate(token);
-    }
+		return this.getAuthenticationManager().authenticate(token);
+	}
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-            Authentication authResult) throws IOException, ServletException {
-        successHandler.onAuthenticationSuccess(request, response, authResult);
-    }
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+			Authentication authResult) throws IOException, ServletException {
+		successHandler.onAuthenticationSuccess(request, response, authResult);
+	}
 
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException failed) throws IOException, ServletException {
-        SecurityContextHolder.clearContext();
-        failureHandler.onAuthenticationFailure(request, response, failed);
-    }
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException failed) throws IOException, ServletException {
+		SecurityContextHolder.clearContext();
+		failureHandler.onAuthenticationFailure(request, response, failed);
+	}
 }

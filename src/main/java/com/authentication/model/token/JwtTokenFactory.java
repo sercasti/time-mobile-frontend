@@ -38,7 +38,7 @@ public class JwtTokenFactory {
 
 
         Claims claims = Jwts.claims().setSubject(user.getUsername());
-        claims.put("scopes", "USER");
+        claims.put("scopes", Arrays.asList("USER"));
 
 		LocalDateTime currentTime = LocalDateTime.now();
         
