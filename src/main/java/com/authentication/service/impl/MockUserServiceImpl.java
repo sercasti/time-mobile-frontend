@@ -9,7 +9,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.authentication.model.User;
 import com.authentication.service.UserService;
 
 @Service
@@ -23,7 +22,7 @@ public class MockUserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User authenticate(String username, String password) throws AuthenticationException {
+	public String authenticate(String username, String password) throws AuthenticationException {
 		String thePassword = usersAndPassMap.get(username);
 		if (StringUtils.isBlank(thePassword))
 			throw new UsernameNotFoundException("User not found: " + username);
@@ -31,14 +30,14 @@ public class MockUserServiceImpl implements UserService {
 		if (!StringUtils.equalsIgnoreCase(thePassword, password)) {
 			throw new BadCredentialsException("Authentication Failed. Username or Password not valid.");
 		}
-		return new User(username);
+		return username;
 	}
 
 	@Override
-	public User getByUsername(String username) {
+	public String getByUsername(String username) {
 		String thePassword = usersAndPassMap.get(username);
 		if (StringUtils.isBlank(thePassword))
 			throw new UsernameNotFoundException("User not found: " + username);
-		return new User(username);
+		return username;
 	}
 }

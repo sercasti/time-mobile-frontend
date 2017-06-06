@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.authentication.config.WebSecurityConfig;
 import com.authentication.extractor.TokenExtractor;
-import com.authentication.model.User;
 import com.authentication.model.token.JwtSettings;
 import com.authentication.model.token.JwtToken;
 import com.authentication.model.token.JwtTokenFactory;
@@ -47,7 +46,7 @@ public class RefreshTokenEndpoint {
 		RefreshToken refreshToken = RefreshToken.create(rawToken, jwtSettings.getTokenSigningKey())
 				.orElseThrow(() -> new RuntimeException());
 		String subject = refreshToken.getSubject();
-		User user = userService.getByUsername(subject);
+		String user = userService.getByUsername(subject);
 		return tokenFactory.createAccessJwtToken(user);
 	}
 	

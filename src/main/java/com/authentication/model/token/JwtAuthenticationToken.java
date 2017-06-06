@@ -6,13 +6,11 @@ import java.util.Collection;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
-import com.authentication.model.User;
-
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = 2877954820905567501L;
 
     private RawAccessJwtToken rawAccessToken;
-    private User user;
+    private String user;
 
     public JwtAuthenticationToken(RawAccessJwtToken unsafeToken) {
         super(null);
@@ -20,7 +18,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
         this.setAuthenticated(false);
     }
 
-    public JwtAuthenticationToken(User user, Collection<? extends GrantedAuthority> authorities) {
+    public JwtAuthenticationToken(String user, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.eraseCredentials();
         this.user = user;

@@ -14,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.authentication.model.User;
 import com.authentication.model.token.JwtAuthenticationToken;
 import com.authentication.model.token.JwtSettings;
 import com.authentication.model.token.RawAccessJwtToken;
@@ -46,8 +45,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 		List<String> scopes = jwsClaims.getBody().get("scopes", List.class);
 		List<GrantedAuthority> authorities = scopes.stream().map(authority -> new SimpleGrantedAuthority(authority))
 				.collect(Collectors.toList());
-		User user = new User(subject);
-		return new JwtAuthenticationToken(user, authorities);
+		return new JwtAuthenticationToken(subject, authorities);
 	}
 
 	@Override

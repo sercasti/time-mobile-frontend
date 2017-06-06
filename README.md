@@ -26,3 +26,11 @@ Cache-Control: no-cache</br>
 GET /api/me HTTP/1.1</br>
 Host: localhost:8080</br>
 X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MSIsInNjb3BlcyI6IlVTRVIiLCJpc3MiOiJodHRwOi8vdGVzdGluZy5jb20iLCJpYXQiOjE0OTY3MDY4MjQsImV4cCI6MTQ5NjcwNzcyNH0.0L68nr2NapNKdXmahAgD_1AzO_BMvCwQTUdg6x53awuPi5slpiXj-j0B7cjrprCc_ZSj7dZ-DxJcLsqpOodhwQ
+
+
+<b>Don't forget to configure the Json Web Tokens parameters on the application.yaml file<b>
+
+  tokenExpirationTime: 15 # Number of minutes until token expires</br>
+  refreshTokenExpTime: 60 # Number of minutes until a refreshed token expires</br>
+  tokenIssuer: http://testing.com</br>
+  tokenSigningKey: xm8EV6Hy5RMFK4EEACIDAwQus</br>

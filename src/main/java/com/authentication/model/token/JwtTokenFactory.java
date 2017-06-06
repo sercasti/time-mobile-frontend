@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.authentication.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -32,12 +31,12 @@ public class JwtTokenFactory {
      * @param roles
      * @return
      */
-    public AccessJwtToken createAccessJwtToken(User user) {
-        if (StringUtils.isBlank(user.getUsername())) 
+    public AccessJwtToken createAccessJwtToken(String user) {
+        if (StringUtils.isBlank(user)) 
             throw new IllegalArgumentException("Cannot create JWT Token without username");
 
 
-        Claims claims = Jwts.claims().setSubject(user.getUsername());
+        Claims claims = Jwts.claims().setSubject(user);
         claims.put("scopes", Arrays.asList("USER"));
 
 		LocalDateTime currentTime = LocalDateTime.now();
@@ -55,14 +54,14 @@ public class JwtTokenFactory {
         return new AccessJwtToken(token, claims);
     }
 
-    public JwtToken createRefreshToken(User user) {
-        if (StringUtils.isBlank(user.getUsername())) {
+    public JwtToken createRefreshToken(String user) {
+        if (StringUtils.isBlank(user)) {
             throw new IllegalArgumentException("Cannot create JWT Token without username");
         }
 
         LocalDateTime currentTime = LocalDateTime.now();
 
-        Claims claims = Jwts.claims().setSubject(user.getUsername());
+        Claims claims = Jwts.claims().setSubject(user);
         claims.put("scopes", Arrays.asList("REFRESH_TOKEN"));
         
         String token = Jwts.builder()

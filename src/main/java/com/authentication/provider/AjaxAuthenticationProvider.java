@@ -13,7 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.authentication.model.User;
 import com.authentication.service.UserService;
 
 @Component
@@ -33,7 +32,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 		String username = (String) authentication.getPrincipal();
 		String password = (String) authentication.getCredentials();
 
-		User user = userService.authenticate(username, password);
+		String user = userService.authenticate(username, password);
 
 		List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("USER"));
 
