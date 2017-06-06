@@ -22,6 +22,7 @@ import com.authentication.model.token.JwtToken;
 import com.authentication.model.token.JwtTokenFactory;
 import com.authentication.model.token.RawAccessJwtToken;
 import com.authentication.model.token.RefreshToken;
+import com.authentication.provider.JwtAuthenticationProvider;
 import com.authentication.service.UserService;
 
 @RestController
@@ -48,5 +49,14 @@ public class RefreshTokenEndpoint {
 		String subject = refreshToken.getSubject();
 		User user = userService.getByUsername(subject);
 		return tokenFactory.createAccessJwtToken(user);
+	}
+	
+	@RequestMapping(value = "/api/logout",method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public @ResponseBody String logout(HttpServletRequest request){
+		String tokenPayload = request.getHeader(WebSecurityConfig.JWT_TOKEN_HEADER_PARAM);
+        RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(tokenPayload));
+        JwtAuthenticationProvider.blacklistToken(token);
+        return "{\"success\": \"token invalidated\"}";
 	}
 }

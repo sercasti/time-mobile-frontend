@@ -19,7 +19,7 @@ public class ExampleController {
 		return "<ul> <li>To login, send a POST to " + uri +"login </li></br>"
 				+ "<li>Secured endpoint example: " + uri +"api/me </li></br>"
 				+ "<li>Unsecured endpoint example: " + uri +"unsecured </li></br>"
-				+ "<li>To logout, just use " + uri +"logout</li>"
+				+ "<li>To logout, send a GET request to: " + uri +"api/logout</li>"
 				+ "</ul></br></br></br>"
 		        + "<b>login headers:</b></br>"
 		        + "X-Requested-With: XMLHttpRequest</br>"  

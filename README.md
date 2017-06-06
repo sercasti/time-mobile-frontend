@@ -3,6 +3,7 @@
 <li>To login, send a POST to http://localhost:8080/login</li>
 <li>Secured endpoint example: http://localhost:8080/api/me</li>
 <li>Unsecured endpoint example: http://localhost:8080/unsecured</li>
+<li>To logout, send a GET request to: http://localhost:8080/api/logout</li>
 </ul>
 <b>login headers:</b></br>
 X-Requested-With: XMLHttpRequest</br>
