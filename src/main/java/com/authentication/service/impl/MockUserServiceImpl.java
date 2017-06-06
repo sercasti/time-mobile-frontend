@@ -19,6 +19,7 @@ public class MockUserServiceImpl implements UserService {
 	static {
 		usersAndPassMap.put("test1", "test1");
 		usersAndPassMap.put("test2", "test2");
+		usersAndPassMap.put("test3", "test3"); 
 	}
 
 	@Override

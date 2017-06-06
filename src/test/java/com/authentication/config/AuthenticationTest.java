@@ -1,9 +1,10 @@
 package com.authentication.config;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
+import static org.junit.Assert.assertNotEquals;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -57,7 +58,7 @@ public class AuthenticationTest {
 		filter.setAuthenticationManager(new MockAuthenticationManager());
 		
 		JwtTokenAuthenticationProcessingFilter jwtFilter = webSecurityConfig.buildJwtTokenAuthenticationProcessingFilter();
-		this.mockMvc = webAppContextSetup(webApplicationContext).addFilter(jwtFilter, "/api/me").addFilter(filter, "/login").build();
+		this.mockMvc = webAppContextSetup(webApplicationContext).apply(springSecurity()).addFilter(jwtFilter, "/api/me").addFilter(filter, "/login").build();
 	}
 
 	@Test
@@ -73,6 +74,31 @@ public class AuthenticationTest {
 						.content(loginRequest))
 				.andExpect(status().isOk()).andReturn().getResponse().getContentAsString().contains("token");
 	}
+	
+	@Test
+	public void protectedURL() throws Exception {
+		String token = jwtTokenFactory.createAccessJwtToken("test1").getToken();
+		this.mockMvc.perform(get("/api/me").header("X-Authorization", "Bearer " + token)).andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString().contains("username");
+	}
+	
+	@Test
+	public void logout() throws Exception {
+		String token = jwtTokenFactory.createAccessJwtToken("test2").getToken();
+		this.mockMvc.perform(get("/api/logout").header("X-Authorization", "Bearer " + token)).andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString().contains("invalidated");
+		this.mockMvc.perform(get("/api/me").header("X-Authorization", "Bearer " + token)).andExpect(status().isUnauthorized())
+		.andReturn().getResponse().getContentAsString().contains("logged");
+	}
+
+	@Test
+	public void refresh() throws Exception {
+		String token = jwtTokenFactory.createRefreshToken("test3").getToken();
+		String newToken = this.mockMvc.perform(get("/api/refresh").header("X-Authorization", "Bearer " + token)).andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		assertNotEquals("token didn´t change", token, newToken);
+	}
+
 
 }
 
